@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+
+  <title>Random Slides: An improvised TED talk</title>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+  <script src="https://www.google.com/jsapi"></script>
+  <!-- General and theme style sheets -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/reveal.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/theme/simple.css" id="theme">
+
+  <!--[if lt IE 9]>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/js/html5shiv.js"></script>
+  <![endif]-->
+
+  <!-- Get Font-awesome from cdn -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+
+  <link rel="stylesheet" href="public/style.css">
+
+  </head>
+
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <section>
+            <div class="cell border-box-sizing code_cell rendered">
+              <div class="text_cell_render border-box-sizing rendered_html">
+                <h1 id="title"></h1>
+              </div>
+            </div>
+            <div class="cell border-box-sizing text_cell rendered">
+              <div class="inner_cell">
+                <div class="text_cell_render border-box-sizing rendered_html">
+                  <h2 id="byline">A TED talk by <span id="author"></span></h2>
+                  <p>
+                    Space for new slide, reload for new title
+                  </p>
+                  <p style="font-size:12px;opacity:50%">
+                    Co-authored by <a href="http://github.com/chigozienri/talk_generator">@chigozienri</a>
+                    and computer in real-time. Remix code <a href="https://glitch.com/~random-slides">here</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+      </div>
+    </div>
+
+    <script src="public/script.js"></script>
+    <script type="text/javascript">
+      
+      async function fetchAsync (url) {
+        let response = await fetch(url);
+        let data = await response.text();
+        return data;
+      }
+      
+      // Title
+      fetchAsync('title').then(function(response) {
+        var title = document.createElement('span');
+        title.innerText = response;
+        document.getElementById("title").appendChild(title);
+      });
+      // Author
+      fetchAsync('author').then(function(response) {
+        var author = document.createElement('span');
+        author.innerText = response;
+        document.getElementById("author").appendChild(author);
+      });
+
+      // Go to next slide, create one if it doesn't exist
+      async function getImageUrl (keyword) {
+        var proxyUrl = 'https://cors-anywhere.herokuapp.com/';
+        var url = 'https://api.flickr.com/services/feeds/photos_public.gne?jsoncallback=?tagmode=any&format=json&tags=';
+        var imageUrl;
+        var data = await fetchAsync(proxyUrl + url + keyword);
+        data = JSON.parse(data.slice(1,-1));
+        var rnd = Math.floor(Math.random() * data.items.length);
+        imageUrl = data.items[rnd]['media']['m'].replace("_m", "_b");
+        return imageUrl;
+      }
+      var nextSlide = function() {
+        if (Reveal.isLastSlide()) {
+          fetchAsync('topic').then(function(topic) {
+            getImageUrl(topic).then( function (url) {
+              var newSlide = document.createElement('section');
+              var img = document.createElement('img');
+              img.setAttribute('src', url);
+              img.setAttribute('style', 'min-width:100%;position:fixed;top:0;left:0');
+              newSlide.appendChild(img);
+              document.getElementsByClassName("slides")[0].appendChild(newSlide);
+              Reveal.next();
+            });
+          });
+          } else {
+            Reveal.next();
+          };
+      }
+      document.body.onkeyup = function(e) {
+        if ([13,32,39].includes(e.keyCode)) {
+          nextSlide()
+        };
+      };
+      document.body.onclick = function() {
+        nextSlide()
+      };
+    </script>
+
+  </body>
+</html>
