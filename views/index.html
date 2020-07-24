@@ -9,7 +9,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
 
-  <title>presentation slides</title>
+  <title>Random Slides: An improvised TED talk</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
@@ -18,18 +18,6 @@
   <!-- General and theme style sheets -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/reveal.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/theme/simple.css" id="theme">
-
-  <!-- If the query includes 'print-pdf', include the PDF print sheet -->
-  <script>
-  if( window.location.search.match( /print-pdf/gi ) ) {
-          var link = document.createElement( 'link' );
-          link.rel = 'stylesheet';
-          link.type = 'text/css';
-          link.href = 'https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/print/pdf.css';
-          document.getElementsByTagName( 'head' )[0].appendChild( link );
-  }
-
-  </script>
 
   <!--[if lt IE 9]>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/lib/js/html5shiv.js"></script>
@@ -57,10 +45,11 @@
                 <div class="text_cell_render border-box-sizing rendered_html">
                   <h2 id="byline">A TED talk by <span id="author"></span></h2>
                   <p>
-                    Co-authored by computer in real-time. Remix code <a href="glitch.com/random-slides">here</a>
-                  </p>
-                  <p>
                     Space for new slide, reload for new title
+                  </p>
+                  <p style="font-size:12px;opacity:50%">
+                    Co-authored by <a href="http://github.com/chigozienri/talk_generator">@chigozienri</a>
+                    and computer in real-time. Remix code <a href="https://glitch.com/~random-slides">here</a>
                   </p>
                 </div>
               </div>
@@ -110,7 +99,7 @@
               var newSlide = document.createElement('section');
               var img = document.createElement('img');
               img.setAttribute('src', url);
-              img.setAttribute('style', 'min-height:100%;min-width:100%;position:fixed;top:0;left:0');
+              img.setAttribute('style', 'min-width:100%;position:fixed;top:0;left:0');
               newSlide.appendChild(img);
               document.getElementsByClassName("slides")[0].appendChild(newSlide);
               Reveal.next();
