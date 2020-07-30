@@ -1,7 +1,7 @@
 Random Slides: an improv party game
 ===================================
 
-[Launch https://random-slides.glitch.me/](https://random-slides.glitch.me/)
+[Launch https://slide-roulette.glitch.me/](https://slide-roulette.glitch.me/)
 
 This site generates a random talk title (using a Markov chain trained on TED talk titles), then pulls random slides with images from Flickr
 

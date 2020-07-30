@@ -9,12 +9,11 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
 
-  <title>Random Slides: An improvised TED talk</title>
+  <title>Slide Roulette: An improvised TED talk</title>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 
-  <script src="https://www.google.com/jsapi"></script>
   <!-- General and theme style sheets -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/reveal.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.5.0/css/theme/simple.css" id="theme">
@@ -28,28 +27,33 @@
 
   <link rel="stylesheet" href="public/style.css">
 
+  <link id="favicon" rel="icon" href="https://cdn.glitch.com/badbce88-824d-4889-83c8-4e8ca11db7b9%2Ffavicon.ico?v=1595597843482" type="image/x-icon">
+  <meta property="og:image" content="https://cdn.glitch.com/badbce88-824d-4889-83c8-4e8ca11db7b9%2Ffavicon.ico?v=1595597843482" />
+    
   </head>
 
   <body>
+    <img src="https://skinny-decorous-deal.glitch.me/counter.png?fallback=slide-roulette&color=black" alt="" style="position:absolute;opacity:0%" aria-hidden="true">
     <div class="reveal">
       <div class="slides">
         <section>
           <section>
             <div class="cell border-box-sizing code_cell rendered">
               <div class="text_cell_render border-box-sizing rendered_html">
-                <h1 id="title"></h1>
+                <h1 id="title"><span id="title_loader" style="padding:20px 20px 0px 0px;background-size:20px 20px;background-position:center center;background-repeat:no-repeat;background-image:url(https://cdn.glitch.com/d3dd542c-1237-4eca-bcfb-089a41f27f8b%2F5.gif?v=1595671892839)"></span></h1>
               </div>
             </div>
             <div class="cell border-box-sizing text_cell rendered">
               <div class="inner_cell">
                 <div class="text_cell_render border-box-sizing rendered_html">
-                  <h2 id="byline">A TED talk by <span id="author"></span></h2>
+                  <h2 id="byline">A talk by <span id="author"><span id="author_loader" style="padding:20px;background-size:20px 20px;background-position:center center;background-repeat:no-repeat;background-image:url(https://cdn.glitch.com/d3dd542c-1237-4eca-bcfb-089a41f27f8b%2F5.gif?v=1595671892839)"></span></span></h2>
                   <p>
                     Space for new slide, reload for new title
                   </p>
                   <p style="font-size:12px;opacity:50%">
-                    Co-authored by <a href="http://github.com/chigozienri/talk_generator">@chigozienri</a>
-                    and computer in real-time. Remix code <a href="https://glitch.com/~random-slides">here</a>
+                    Co-authored by <a href="http://github.com/chigozienri/slide-roulette">@chigozienri</a>
+                    and computer in real-time. Remix code <a href="https://glitch.com/~slide-roulette">here</a>.
+                    <br />Try traditional powerpoint karaoke <a href="karaoke">here</a>
                   </p>
                 </div>
               </div>
@@ -63,19 +67,37 @@
     <script type="text/javascript">
       
       async function fetchAsync (url) {
-        let response = await fetch(url);
-        let data = await response.text();
-        return data;
+        var text = await fetch(url).then(function(response) {
+          if (response.ok) {
+            return response.text();
+          } else {
+            return Promise.reject(response);
+          }
+        }).catch(function (err) {
+          console.log(err);
+          console.log('trying again');
+        });
+        if (!text) {
+          return fetchAsync(url)
+        } else {
+          return text;
+        }
       }
       
       // Title
       fetchAsync('title').then(function(response) {
+        console.log(response);
+        var elem = document.getElementById("title_loader");
+        elem.parentNode.removeChild(elem);
         var title = document.createElement('span');
         title.innerText = response;
         document.getElementById("title").appendChild(title);
       });
       // Author
       fetchAsync('author').then(function(response) {
+        console.log(response);
+        var elem = document.getElementById("author_loader");
+        elem.parentNode.removeChild(elem);
         var author = document.createElement('span');
         author.innerText = response;
         document.getElementById("author").appendChild(author);
@@ -96,6 +118,8 @@
         if (Reveal.isLastSlide()) {
           fetchAsync('topic').then(function(topic) {
             getImageUrl(topic).then( function (url) {
+              console.log(topic + ': ' + url);
+              if (!url) {return nextSlide()};
               var newSlide = document.createElement('section');
               var img = document.createElement('img');
               img.setAttribute('src', url);

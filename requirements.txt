@@ -2,3 +2,5 @@ Flask
 gunicorn
 markovify
 names
+bs4
+requests
