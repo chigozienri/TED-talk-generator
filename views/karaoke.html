@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+
+  <title>Powerpoint Karaoke: A random powerpoint from the web</title>
+
+  <link id="favicon" rel="icon" href="https://cdn.glitch.com/badbce88-824d-4889-83c8-4e8ca11db7b9%2Ffavicon.ico?v=1595597843482" type="image/x-icon">
+  <meta property="og:image" content="https://cdn.glitch.com/badbce88-824d-4889-83c8-4e8ca11db7b9%2Ffavicon.ico?v=1595597843482" />
+    
+  </head>
+
+  <body>
+    <img src="https://skinny-decorous-deal.glitch.me/counter.png?fallback=powerpoint-karaoke&color=black" alt="" style="position:absolute;opacity:0%" aria-hidden="true">
+    <div id="slides"></div>
+
+    <script type="text/javascript">
+      async function fetchAsync (url) {
+        var text = await fetch(url).then(function(response) {
+          if (response.ok) {
+            return response.text();
+          } else {
+            return Promise.reject(response);
+          }
+        }).catch(function (err) {
+          console.log(err);
+          console.log('trying again');
+        });
+        if (!text) {
+          return fetchAsync(url)
+        } else {
+          return text;
+        }
+      }
+      
+      var getSlides = function() {
+        fetchAsync('slides_url').then(function(url) {
+          if (!url) {return getSlides()};
+          var newSlide = document.createElement('section');
+          var container = document.createElement('div');
+          container.setAttribute('style', 'position:fixed;width:100%;height:100%');
+          var iframe = document.createElement('iframe');
+          var gdocsUrl = 'https://docs.google.com/gview?url=';
+          var gdocsPost = '&embedded=true'
+          iframe.setAttribute('src', gdocsUrl + url + gdocsPost);
+          iframe.setAttribute('style', 'display:block;width:100%;height:100%;position:fixed;top:0;left:0');
+          container.appendChild(iframe);
+          newSlide.appendChild(container);
+          document.getElementById("slides").appendChild(newSlide);                
+        });
+      }
+      getSlides();
+    </script>
+  </body>
+</html>
